@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Water.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace Water.WebApi
 {
@@ -26,6 +28,8 @@ namespace Water.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<AreaController>();
+            services.AddDbContext<WaterContext>(builder => builder.UseInMemoryDatabase("test"));
             services.AddControllers();
         }
 
@@ -37,7 +41,7 @@ namespace Water.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
@@ -46,6 +50,7 @@ namespace Water.WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                //endpoints.MapDefaultControllerRoute();
                 endpoints.MapGet("/ping", async context =>
                 {
                     await context.Response.WriteAsync("Pong");
